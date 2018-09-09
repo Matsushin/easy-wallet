@@ -5,14 +5,38 @@
     </header>
     <main>
       <img src="./assets/logo.png" alt="Vue.js PWA">
-      <router-view></router-view>
+      <h1>{{ message }}</h1>
+      <router-view message="router-viewよりこんにちは"></router-view>
+      <Hello message="componentよりこんにちは"></Hello>
     </main>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'app'
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import Hello from './components/Hello.vue'
+
+@Component({
+  name: 'app',
+  // Helloをcomponentとして定義する.
+  components: {
+    Hello
+  }
+})
+
+export default class App extends Vue {
+  private title = 'My PWA page'
+  private message = ''
+
+  mounted () {
+    console.log('mounted App')
+    this.showMsg('Hello, Vue.js and TypeScript')
+  }
+
+  showMsg (msg: string) {
+    this.message = msg
+  }
 }
 </script>
 
