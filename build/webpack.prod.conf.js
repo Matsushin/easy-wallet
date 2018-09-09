@@ -10,7 +10,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const WorkboxPlugin = require('workbox-webpack-plugin') 
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const loadMinified = require('./load-minified')
 
@@ -98,13 +98,14 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),
-    // service worker caching
-    new SWPrecacheWebpackPlugin({
+    new WorkboxPlugin.GenerateSW({
       cacheId: 'easy-wallet',
-      filename: 'service-worker.js',
-      staticFileGlobs: ['dist/**/*.{js,html,css}'],
-      minify: true,
-      stripPrefix: 'dist/'
+      globDirectory: config.build.assetsRoot,
+      globPatterns: ['**/*.{html,js,css,png}'],
+      swDest: path.join(config.build.assetsRoot, 'service-worker.js'),
+      skipWaiting: true,
+      clientsClaim: true,
+      runtimeCaching: []
     })
   ]
 })
